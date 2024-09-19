@@ -1,8 +1,11 @@
 import React from "react";
-export default function Header() {
-    return (
-        <div className="header">
-            <h1>Kredilibranza</h1>
-        </div>
-    );
+
+function Header() {
+  return (
+    <header>
+      <hr id="separador1" />
+    </header>
+  );
 }
+
+export default Header;

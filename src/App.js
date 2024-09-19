@@ -1,22 +1,29 @@
-import React from 'react';
-import NavBar from './componentes/NavBar';
-import Header from './componentes/Header';
-import RegistroForm from './componentes/RegistroForm';
-import Services from './componentes/Services';
-import Footer from './componentes/Footer';
-import Contacto from './componentes/Contacto';
-import Banner from './componentes/Banner';
-import './App.css'; // Aquí se importa el archivo CSS con todos los estilos
+import React from "react";
+import NavBar from "./componentes/NavBar";
+import Header from "./componentes/Header";
+import Form from "./componentes/Form";
+import Condiciones from "./componentes/Condiciones";
+import Simulador from "./componentes/Simulador";
+import QuienesSomos from "./componentes/QuienesSomos";
+import Footer from "./componentes/Footer";
+
+import './componentes/Banner.css'
+import './componentes/Footer.css'
+import './componentes/Form.css'
+import './componentes/NavBar.css'
+import './componentes/QuienesSomos.css'
+import './componentes/Simulador.css'
+import './componentes/Condiciones.css'
 
 function App() {
   return (
-    <div className="App">
+    <div>
       <NavBar />
       <Header />
-      <Banner />
-      <Services />
-      <RegistroForm />
-      <Contacto />
+      <Form />
+      <Condiciones />
+      <Simulador />
+      <QuienesSomos />
       <Footer />
     </div>
   );
