@@ -6,8 +6,8 @@
 
 body {
     font-family: Arial, sans-serif;
-    min-width: 770px; /* Ancho mínimo */
-    min-height: 540px; /* Alto mínimo */
+    min-width: 770px;
+    min-height: 540px; 
 }
 
 /*--------------------------- Estilos del encabezado ---------------------------*/
@@ -71,7 +71,7 @@ nav ul li a:hover {
     height: 100px;
     left: 0;
     border-radius: 3.6%;
-    z-index: 99; /* Asegura que esté encima de #Pensionado */
+    z-index: 99; 
     position: absolute;
 }
 
@@ -80,7 +80,7 @@ nav ul li a:hover {
     margin-left: 3.5%;
     left: 0;
     border-radius: 3.6%;
-    z-index: 99; /* Asegura que esté encima de #Pensionado */
+    z-index: 99; 
     position: absolute;
     font-family: Arial, sans-serif;
     font-size: x-large;
