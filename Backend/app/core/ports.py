@@ -26,8 +26,6 @@ class LlmPort(ABC):
     def generate_text(self, prompt: str, retrieval_context: str) -> str:
         pass
 
-from abc import ABC, abstractmethod
-
 class DocumentTextExtractorPort(ABC):
     @abstractmethod
     def extract_text(self, file_bytes: bytes) -> str:

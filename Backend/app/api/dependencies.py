@@ -6,12 +6,16 @@ from app.adapters.document_extractors import PDFTextExtractorAdapter, DocxTextEx
 from app.usecases import DocumentService
 from fastapi import UploadFile, HTTPException
 from app.adapters.mongodb_adapter import MongoDBAdapter
+from app.adapters.mongodb_user_adapter import MongoDBUserAdapter
 from app.usecases import FormSubmissionService
 from app.configurations import Configs
+from fastapi.security import OAuth2PasswordBearer
+from app.usecases import FormSubmissionService, AuthService
+from app.core.models import User
 
-from app.adapters.mongodb_user_adapter import MongoDBUserAdapter
-from app.usecases import AuthService
 
+# OAuth2 scheme para autenticación
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
 class RAGServiceSingleton:
     _instance = None
@@ -26,31 +30,31 @@ class RAGServiceSingleton:
             cls._instance = usecases.RAGService(document_repo=document_repo, openai_adapter=openai_adapter)
         return cls._instance
 
+class MongoDBAdapterSingleton:
+    _instance = None
 
-def get_document_service(file: UploadFile) -> DocumentService:
-    if file.content_type == 'application/pdf':
-        text_extractor = PDFTextExtractorAdapter()  # Estrategia para PDF
-    elif file.content_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-        text_extractor = DocxTextExtractorAdapter()  # Estrategia para DOCX
-    else:
-        raise HTTPException(status_code=400, detail="Formato de archivo no soportado")
-
-    return DocumentService(text_extractor)
-
+    @classmethod
+    def get_instance(cls) -> MongoDBAdapter:
+        if cls._instance is None:
+            cls._instance = MongoDBAdapter()
+        return cls._instance
+    
+    
 class FormServiceSingleton:
     _instance = None
-    _configs = None
 
     @classmethod
     def get_instance(cls) -> FormSubmissionService:
         if cls._instance is None:
             cls._configs = Configs()
-            form_repository = MongoDBAdapter()
+            form_repository = MongoDBAdapterSingleton.get_instance()
             cls._instance = FormSubmissionService(
                 form_repository=form_repository,
                 configs=cls._configs
             )
         return cls._instance
+
+
     
 class AuthServiceSingleton:
     _instance = None
@@ -60,3 +64,17 @@ class AuthServiceSingleton:
             user_repo = MongoDBUserAdapter()
             cls._instance = AuthService(user_repo=user_repo)
         return cls._instance
+    
+def get_document_service(file: UploadFile) -> DocumentService:
+    if file.content_type == 'application/pdf':
+        text_extractor = PDFTextExtractorAdapter()  # Estrategia para PDF
+    elif file.content_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+        text_extractor = DocxTextExtractorAdapter()  # Estrategia para DOCX
+    else:
+        raise HTTPException(status_code=400, detail="Formato de archivo no soportado")
+
+    return DocumentService(text_extractor) 
+
+
+
+

@@ -3,7 +3,6 @@ from fastapi import APIRouter, UploadFile, File , HTTPException, Depends, status
 from pydantic import BaseModel
 from app import usecases
 from app.api import dependencies
-from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from app.core.auth import authenticate_user, create_access_token, get_current_user
 from app.core.models import User
 from passlib.context import CryptContext
@@ -12,12 +11,19 @@ from app.usecases import DocumentService, RAGService,AuthService,FormSubmissionS
 from app.api.dependencies import get_document_service, RAGServiceSingleton,FormServiceSingleton
 from app.core.schemas import FormData,Submission
 from app.configurations import Configs
-from app.adapters.mongodb_adapter import MongoDBAdapter  # Importar MongoDBAdapter
+from app.adapters.mongodb_adapter import MongoDBAdapter  
+from app.api.dependencies import (
+    get_document_service,
+    RAGServiceSingleton,
+    FormServiceSingleton,
+    AuthServiceSingleton,
+    oauth2_scheme
+)
+from app.core.schemas import FormData, Submission
+from app.usecases import AuthService, FormSubmissionService
+from typing import List, Dict, Any
+from fastapi.security import OAuth2PasswordRequestForm
 
-mongodb_adapter = MongoDBAdapter()
-
-configs = Configs()
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
 rag_router = APIRouter()
 
@@ -51,29 +57,29 @@ async def upload_file(
     return {"inserted_id": document_id}
 
 
-
 @rag_router.delete("/delete-document/{document_id}", status_code=200)
 async def delete_document(
     document_id: str,
     rag_service: RAGService = Depends(RAGServiceSingleton.get_instance)
 ):
-    rag_service.delete_document(document_id)  # Usar RAGService para eliminar el documento
+    rag_service.delete_document(document_id)  
     return {"status": "Document deleted successfully"}
 
 
 @rag_router.post("/token", response_model=dict)
 async def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
-    auth_service: AuthService = Depends(dependencies.AuthServiceSingleton.get_instance)
+    auth_service: AuthService = Depends(AuthServiceSingleton.get_instance),
 ):
-    access_token = await auth_service.authenticate_user(form_data.username, form_data.password)
-    if not access_token:
+    result = await auth_service.login(form_data.username, form_data.password)
+
+    if "error" in result:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Nombre de usuario o contraseña incorrectos",
+            detail=result["error"],
             headers={"WWW-Authenticate": "Bearer"},
         )
-    return {"access_token": access_token, "token_type": "bearer"}
+    return result
 
 @rag_router.post("/submit-form/", status_code=201, response_model=Dict[str, Any])
 async def submit_form(
@@ -97,28 +103,11 @@ async def submit_form(
 @rag_router.get("/get-requests/", response_model=List[Submission], status_code=200)
 async def get_requests(
     cedula: str = Query(None, description="Cédula para buscar"),
-    current_user: User = Depends(get_current_user),
+    form_service: FormSubmissionService = Depends(FormServiceSingleton.get_instance),
+    current_user: User = Depends(AuthServiceSingleton.get_instance),
 ):
     try:
-        # Filtrar por cédula si se proporciona
-        if cedula:
-            submissions_cursor = mongodb_adapter.db["form_submissions"].find({"cedula": cedula})
-        else:
-            submissions_cursor = mongodb_adapter.db["form_submissions"].find()
-        
-        submissions = []
-        async for submission in submissions_cursor:
-            submission_data = {
-                "id": str(submission["_id"]),
-                "nombre_completo": submission["nombre_completo"],
-                "cedula": submission["cedula"],
-                "convenio": submission["convenio"],
-                "telefono": submission["telefono"],
-                "fecha_nacimiento": submission["fecha_nacimiento"],
-                "politica_privacidad": submission["politica_privacidad"],
-                "created_at": submission.get("created_at"),
-            }
-            submissions.append(Submission(**submission_data))
+        submissions = await form_service.get_form_submissions(cedula=cedula)
         return submissions
     except Exception as e:
         print(f"Error al obtener las solicitudes: {e}")

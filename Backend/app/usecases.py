@@ -9,9 +9,9 @@ from datetime import datetime, date
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import aiosmtplib
-from typing import Dict, Any, Tuple
+from typing import Dict, Any, Tuple, Optional, List
 from bson import ObjectId
-
+from app.core.schemas import Submission
 
 from app.core.ports import UserRepositoryPort
 from app.core.auth import verify_password, create_access_token
@@ -119,23 +119,25 @@ class FormSubmissionService:
         except Exception as e:
             return False, f"Error al procesar el formulario: {str(e)}", {}
 
-    async def get_form_submission(self, submission_id: str) -> Tuple[bool, str, Dict[str, Any]]:
-        try:
-            if isinstance(submission_id, str):
-                obj_id = ObjectId(submission_id)
-            else:
-                obj_id = submission_id
-
-            document = await self.form_repository.get_form_submission(obj_id)
-            if not document:
-                return False, "Formulario no encontrado", {}
-
-            if document and '_id' in document:
-                document['_id'] = str(document['_id'])
-
-            return True, "Formulario recuperado exitosamente", document
-        except Exception as e:
-            return False, f"Error al recuperar el formulario: {str(e)}", {}
+    async def get_form_submissions(self, cedula: Optional[str] = None) -> List[Submission]:
+        query = {"cedula": cedula} if cedula else {}
+        submissions_cursor = self.form_repository.db["form_submissions"].find(query)
+        
+        submissions = []
+        async for submission in submissions_cursor:
+            submission_data = {
+                "id": str(submission["_id"]),
+                "nombre_completo": submission["nombre_completo"],
+                "cedula": submission["cedula"],
+                "convenio": submission["convenio"],
+                "telefono": submission["telefono"],
+                "fecha_nacimiento": submission["fecha_nacimiento"],
+                "politica_privacidad": submission["politica_privacidad"],
+                "created_at": submission.get("created_at"),
+            }
+            submissions.append(Submission(**submission_data))
+        
+        return submissions
         
 
 class AuthService:
@@ -143,7 +145,8 @@ class AuthService:
         self.user_repo = user_repo
         self.configs = Configs()
 
-    async def authenticate_user(self, username: str, password: str) -> str | None:
+    async def authenticate_user(self, username: str, password: str) -> Optional[str]:
+        """Verifica las credenciales del usuario y genera un token de acceso."""
         user = await self.user_repo.get_user_by_username(username)
         if not user or not verify_password(password, user.hashed_password):
             return None
@@ -152,3 +155,11 @@ class AuthService:
             expires_delta=timedelta(minutes=self.configs.access_token_expire_minutes)
         )
         return access_token
+    
+    async def login(self, username: str, password: str) -> dict:
+        """Autentica el usuario y devuelve el token de acceso."""
+        token = await self.authenticate_user(username, password)
+        if not token:
+            # Devolver un diccionario con mensaje de error para que el router maneje la excepción
+            return {"error": "Nombre de usuario o contraseña incorrectos"}
+        return {"access_token": token, "token_type": "bearer"}
