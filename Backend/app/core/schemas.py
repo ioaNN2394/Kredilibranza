@@ -1,4 +1,3 @@
-# schemas.py
 
 from pydantic import BaseModel, Field
 from typing import Optional
@@ -20,7 +19,7 @@ class Submission(BaseModel):
     telefono: str
     fecha_nacimiento: datetime
     politica_privacidad: bool
-    created_at: Optional[datetime]
+    created_at: Optional[datetime]      
 
     class Config:
         orm_mode = True

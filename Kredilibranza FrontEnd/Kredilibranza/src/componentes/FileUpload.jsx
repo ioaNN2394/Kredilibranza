@@ -3,52 +3,56 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { X, File, Upload } from 'lucide-react';
+import Button from './Button';
+import './FileUpload.css'; 
 import axios from 'axios';
-import './FileUpload.css';
 
 export default function FileUpload() {
   const [files, setFiles] = useState([]);
-
-  // Estados para la nueva funcionalidad
+  const [error, setError] = useState('');
+  
+  // Estados para la funcionalidad de ver registros
   const [showRequestsModal, setShowRequestsModal] = useState(false);
   const [requests, setRequests] = useState([]);
   const [searchCedula, setSearchCedula] = useState('');
 
+  // Función para cargar archivos
+  const uploadFile = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const uploadUrl = 'http://localhost:8000/upload-file/';
+    const token = localStorage.getItem('token');
+
+    try {
+      const response = await axios.post(uploadUrl, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      const documentId = response.data.inserted_id;
+      setFiles((prevFiles) => [
+        ...prevFiles,
+        {
+          file,
+          preview: URL.createObjectURL(file),
+          id: documentId,
+        },
+      ]);
+    } catch (error) {
+      console.error('Error al subir el archivo:', error);
+      setError('Error al subir el archivo.');
+    }
+  };
+
   const onDrop = useCallback((acceptedFiles) => {
-    acceptedFiles.forEach(async (file) => {
-      const formData = new FormData();
-      formData.append('file', file);
-
-      let uploadUrl = '';
-      if (file.type === 'application/pdf') {
-        uploadUrl = 'http://localhost:8000/upload-pdf/';
-      } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-        uploadUrl = 'http://localhost:8000/upload-docx/';
+    acceptedFiles.forEach((file) => {
+      if (file.type === 'application/pdf' || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+        uploadFile(file);
       } else {
-        alert('Tipo de archivo no soportado');
-        return;
-      }
-      const token = localStorage.getItem('token');
-      console.log('Token:', token); // Verificar el token
-      try {
-        const response = await axios.post(uploadUrl, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
-        const documentId = response.data.id;
-        setFiles((prevFiles) => [
-          ...prevFiles,
-          {
-            file,
-            preview: URL.createObjectURL(file),
-            id: documentId,
-          },
-        ]);
-      } catch (error) {
-        console.error('Error al subir el archivo:', error);
+        setError('Tipo de archivo no soportado');
       }
     });
   }, []);
@@ -62,8 +66,12 @@ export default function FileUpload() {
   });
 
   const removeFile = async (fileObj) => {
+    if (!fileObj.id) {
+      setError('Error: No se puede eliminar el archivo porque falta el ID');
+      return;
+    }
+
     const token = localStorage.getItem('token');
-    console.log('Token:', token); // Verificar el token
     try {
       await axios.delete(`http://localhost:8000/delete-document/${fileObj.id}`, {
         headers: {
@@ -75,13 +83,13 @@ export default function FileUpload() {
       URL.revokeObjectURL(fileObj.preview);
     } catch (error) {
       console.error('Error al eliminar el archivo:', error);
+      setError('Error al eliminar el archivo.');
     }
   };
 
   // Función para obtener las solicitudes desde el backend
   const fetchRequests = async (cedula = '') => {
     const token = localStorage.getItem('token');
-    console.log('Token:', token); // Verificar el token
     try {
       const response = await axios.get('http://localhost:8000/get-requests/', {
         headers: {
@@ -97,24 +105,19 @@ export default function FileUpload() {
     }
   };
 
-  // useEffect para obtener las solicitudes al abrir el modal
   useEffect(() => {
     if (showRequestsModal) {
       fetchRequests();
-      // Añadir clase para hacer el fondo opaco
       document.body.classList.add('modal-open');
     } else {
-      // Remover clase cuando el modal se cierra
       document.body.classList.remove('modal-open');
     }
   }, [showRequestsModal]);
 
-  // Manejar cambios en el campo de búsqueda
   const handleSearchChange = (e) => {
     setSearchCedula(e.target.value);
   };
 
-  // Manejar envío del formulario de búsqueda
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     fetchRequests(searchCedula);
@@ -123,9 +126,8 @@ export default function FileUpload() {
   return (
     <div className="file-upload-container">
       <div className="file-upload-card">
-        <h1 className="file-upload-title">Carga de Documentos</h1>
-
-        {/* Botón para ver solicitudes */}
+        <h1 className="text-3xl font-bold text-center mb-8">Carga de Documentos</h1>
+        
         <button
           onClick={() => setShowRequestsModal(true)}
           className="view-requests-button"
@@ -138,44 +140,48 @@ export default function FileUpload() {
           className={`dropzone ${isDragActive ? 'dropzone-active' : ''}`}
         >
           <input {...getInputProps()} />
-          <Upload size={48} />
+          <Upload className="mx-auto text-gray-400 mb-4" size={48} />
           {isDragActive ? (
-            <p>Suelta los archivos aquí ...</p>
+            <p className="text-lg text-blue-500">Suelta los archivos aquí ...</p>
           ) : (
-            <p>Arrastra y suelta archivos PDF o DOCX aquí, o haz clic para seleccionar archivos</p>
+            <p className="text-lg text-gray-500">Arrastra y suelta archivos PDF o DOCX aquí, o haz clic para seleccionar archivos</p>
           )}
         </div>
 
+        {error && (
+          <div className="error-message">
+            <p className="text-red-500">{error}</p>
+          </div>
+        )}
+
         {files.length > 0 && (
           <div className="uploaded-files-list">
-            <h2>Documentos Cargados</h2>
+            <h2 className="text-2xl font-semibold mb-4">Documentos Cargados</h2>
             <ul>
               {files.map((fileObj) => (
                 <li key={fileObj.id} className="uploaded-file-item">
                   <div className="file-info">
-                    <File size={24} />
+                    <File className="text-blue-500 mr-3" size={24} />
                     <span className="file-name">{fileObj.file.name}</span>
                   </div>
-                  <button
+                  <Button
                     onClick={() => removeFile(fileObj)}
-                    className="remove-button"
+                    className="remove-button flex items-center"
                   >
                     <X size={20} />
                     <span className="sr-only">Eliminar archivo</span>
-                  </button>
+                  </Button>
                 </li>
               ))}
             </ul>
           </div>
         )}
 
-        {/* Modal de solicitudes */}
         {showRequestsModal && (
           <div className="modal-overlay" onClick={() => setShowRequestsModal(false)}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
               <h2>Solicitudes Registradas</h2>
 
-              {/* Formulario de búsqueda */}
               <form onSubmit={handleSearchSubmit} className="search-form">
                 <input
                   type="text"
@@ -221,7 +227,6 @@ export default function FileUpload() {
             </div>
           </div>
         )}
-
       </div>
     </div>
   );

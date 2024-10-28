@@ -1,21 +1,17 @@
-# Backend/app/main.py
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.routers import rag_router  # Importa el router principal
+from app.api.routers import rag_router  
 
 app = FastAPI()
 
-# Configurar CORS para permitir el frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Cambia esto según tu configuración
+    allow_origins=["http://localhost:3000"], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Incluir los routers existentes
 app.include_router(rag_router)
 
 if __name__ == "__main__":
