@@ -1,8 +1,6 @@
 from app.core.models import Document
 from app.core import ports
-
 from app.core.ports import DocumentTextExtractorPort
-
 from app.core.ports import FormRepositoryPort
 from app.core.schemas import FormData
 from datetime import datetime, date
@@ -12,7 +10,6 @@ import aiosmtplib
 from typing import Dict, Any, Tuple, Optional, List
 from bson import ObjectId
 from app.core.schemas import Submission
-
 from app.core.ports import UserRepositoryPort
 from app.core.auth import verify_password, create_access_token
 from app.core.models import UserInDB
@@ -146,7 +143,6 @@ class AuthService:
         self.configs = Configs()
 
     async def authenticate_user(self, username: str, password: str) -> Optional[str]:
-        """Verifica las credenciales del usuario y genera un token de acceso."""
         user = await self.user_repo.get_user_by_username(username)
         if not user or not verify_password(password, user.hashed_password):
             return None
@@ -157,9 +153,10 @@ class AuthService:
         return access_token
     
     async def login(self, username: str, password: str) -> dict:
-        """Autentica el usuario y devuelve el token de acceso."""
         token = await self.authenticate_user(username, password)
         if not token:
-            # Devolver un diccionario con mensaje de error para que el router maneje la excepción
             return {"error": "Nombre de usuario o contraseña incorrectos"}
         return {"access_token": token, "token_type": "bearer"}
+
+
+
