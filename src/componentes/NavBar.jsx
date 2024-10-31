@@ -20,6 +20,10 @@ function NavBar() {
             <li><Link to="/#quienes-somos">¿Quiénes Somos?</Link></li>
             <li><Link to="/#contacto">Contáctanos</Link></li>
             <li><Link to="/chatbot">ChatBot</Link></li>
+<<<<<<< HEAD
+=======
+            <li><Link to="/rag">RAG</Link></li>
+>>>>>>> cb721a9 (Tuki)
           </ul>
         </>
       )}
