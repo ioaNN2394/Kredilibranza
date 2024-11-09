@@ -1,0 +1,65 @@
+/* Estilos para el chatbot flotante */
+.floatingChatbot {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  background-color: #ed5621;
+  border-radius: 50%;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.sphere {
+  width: 30px;
+  height: 30px;
+  background-color: white;
+  border-radius: 50%;
+}
+
+/* Estilos para la ventana del chatbot */
+.chatbotWindow {
+  position: fixed;
+  bottom: 90px; /* Para evitar que se superponga con la esfera */
+  right: 20px;
+  width: 350px;
+  height: 500px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+
+/* Botón de cierre */
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #333;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .chatbotWindow {
+    width: 300px;
+    height: 400px;
+  }
+  .floatingChatbot {
+    width: 50px;
+    height: 50px;
+  }
+  .sphere {
+    width: 25px;
+    height: 25px;
+  }
+}

@@ -1,0 +1,77 @@
+/*------------------------- sección contacto --------------------------------- */
+#contenedor-contactos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    color: #fff;
+    background-color: #032547;
+    z-index: 100;
+  }
+  
+  .contactos {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-top: 2rem;
+    flex-wrap: wrap; /* Añadir para que los elementos se ajusten en pantallas pequeñas */
+  }
+  
+  .logoft {
+    width: 15%;
+    height: auto;
+    margin-bottom: 2%;
+    max-width: 150px; /* Limitar el tamaño máximo */
+  }
+  
+  .celular h2, .redes h2, .pagina_web h2 {
+    font-size: 1.3rem;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .celular p, .redes p, .pagina_web p {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    justify-content: center; /* Asegura que el texto y las imágenes estén alineados */
+  }
+  
+  .celular p img, .redes p img, .pagina_web p img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
+  
+  footer p {
+    margin-top: 2rem;
+    font-size: 0.9rem;
+  }
+  
+  /* Estilos responsivos */
+  @media (max-width: 768px) {
+    #contenedor-contactos {
+      padding: 1rem;
+    }
+  
+    .contactos {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .logoft {
+      width: 30%;
+      margin-bottom: 1rem;
+    }
+  
+    .celular, .redes, .pagina_web {
+      width: 100%;
+      margin-bottom: 1.5rem;
+    }
+  
+    .celular p, .redes p, .pagina_web p {
+      font-size: 0.9rem; /* Ajustar tamaño de fuente en pantallas pequeñas */
+    }
+  }
+  

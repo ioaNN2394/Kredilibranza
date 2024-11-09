@@ -1,16 +1,15 @@
-/*-------------------------  sección condiciones --------------------------------- */
-.container_txtCondiciones {
+.containerTxtCondiciones {
     text-align: center;
     margin-bottom: 20px;
 }
 
-.container_condiciones {
+.containerCondiciones {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.card_condiciones {
+.cardCondiciones {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -21,41 +20,39 @@
     width: 80%;
 }
 
-.card_condiciones2 {
+.cardCondiciones2 {
     font-size: 100%;
     margin-left: -4.2%;
-    position: absolute; /* Posición absoluta para superponer */
+    position: absolute;
     transform: translateX(-50%);
-    z-index: 2; /* Asegura que esté encima de #Pensionado */
-    color: white; /* Color del texto */
-    background-color: #ed5621; /* Fondo semitransparente */
+    z-index: 2;
+    color: white;
+    background-color: #ed5621;
     padding: 1rem;
     border-radius: 15px;
     text-align: center;
-    height: auto;
-    width: auto;
 }
 
-.card_condiciones ul {
+.list {
     list-style-type: none;
     padding: 0;
 }
 
-.card_condiciones li {
+.listItem {
     margin-bottom: 10px;
 }
 
-.titulo_condicion {
+.tituloCondicion {
     color: #ed5621;
     font-weight: bold;
     margin-right: 10px;
 }
 
-.heart_image {
+.heartImage {
     margin-left: 20px;
 }
 
-.heart_image img {
+.heartImage img {
     border-radius: 20px;
     max-width: 100%;
     height: auto;

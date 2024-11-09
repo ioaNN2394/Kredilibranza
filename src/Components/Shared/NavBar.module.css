@@ -64,24 +64,43 @@ nav ul li a:hover {
     z-index: 10000;
 }
 
-#Clientes {
-    margin-top: 16%;
-    margin-left: 5%;
-    width: 105px;
-    height: 100px;
-    left: 0;
-    border-radius: 3.6%;
-    z-index: 99; 
+/* Contenedor para la imagen y el texto de Clientes */
+.clientesContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     position: absolute;
+    top: 20%;
+    left: 3%;
+    z-index: 99;
+}
+
+#Clientes {
+    width: 80px; /* Tamaño ajustado de la imagen de clientes */
+    height: 75px;
+    margin-top: 75%;
 }
 
 #txtClientes {
-    margin-top: 25%;
-    margin-left: 3.5%;
-    left: 0;
-    border-radius: 3.6%;
-    z-index: 99; 
-    position: absolute;
     font-family: Arial, sans-serif;
-    font-size: x-large;
+    font-size: large; /* Tamaño del texto de clientes */
+    color: #ed5621;
+    margin-top: 5px; /* Espacio entre la imagen y el texto */
+}
+
+.login {
+    border-radius: 20px;
+    background-color: #e7771c;
+    height: 40px;
+    width: 120px;
+    color: #004080;
+    font-weight: bold;
+    font-size: medium; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+button:hover {
+    transform: scale(1.1);
 }
