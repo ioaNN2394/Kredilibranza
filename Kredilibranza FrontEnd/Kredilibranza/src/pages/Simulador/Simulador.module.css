@@ -1,0 +1,117 @@
+/*------------------------- sección simulador --------------------------------- */
+.simulador {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 2rem;
+    background-color: rgb(246, 244, 243);
+  }
+  
+  .containerSimulador {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    background-color: rgb(246, 244, 243);
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 2rem;
+  }
+  
+  .simuladorForm {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .formGroup {
+    display: flex;
+    flex-direction: column;
+    margin-right: 1rem;
+  }
+  
+  .label {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #ed5621;
+  }
+  
+  .input,
+  .select {
+    padding: 0.5rem;
+    border: 1px solid #ed5621;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .btnSimular {
+    padding: 0.5rem 1rem;
+    background-color: #ed5621;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .resultado {
+    background-color: rgb(246, 244, 243);
+    padding: 1rem;
+    border: 1px solid #ed5621;
+    border-radius: 5px;
+    text-align: center;
+    margin-top: 1rem;
+  }
+  
+  .resultadoTitulo {
+    color: #ed5621;
+    font-size: 1.5rem;
+  }
+  
+  .resultadoTexto {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+  }
+  
+  .containerImg {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 35%;
+    justify-content: space-between;
+  }
+  
+  .imgPensionados {
+    border-radius: 20px;
+    margin-bottom: 1rem;
+    width: 50%;
+    height: auto;
+  }
+  
+  .beneficios {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+  
+  .beneficioItem {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .iconBeneficio {
+    width: 50px;
+    height: 50px;
+    margin-right: 0.5rem;
+  }
+  
+  .beneficioTexto {
+    font-size: 1rem;
+    margin: 0;
+  }
+  

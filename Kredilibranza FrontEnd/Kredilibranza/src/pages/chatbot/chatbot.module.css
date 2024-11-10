@@ -1,0 +1,70 @@
+/* Ajustes para que la ventana del chatbot se adapte a la ventana flotante */
+.chatContainer {
+  display: flex; 
+  flex-direction: column; 
+  height: 100%;
+}
+
+.chatWindow {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; 
+  background-color: #ffffff;
+  border-radius: 10px; 
+  overflow: hidden;
+}
+
+.messagesContainer {
+  flex-grow: 1; 
+  padding: 10px; 
+  overflow-y: auto; 
+  background-color: #f9f9f9;
+}
+
+.message {
+  padding: 10px 15px;
+  margin: 5px 0;
+  border-radius: 20px; 
+  max-width: 80%; 
+  font-size: 14px; 
+}
+
+.messageUser {
+  background-color: #e1f3fb;
+  align-self: flex-end;
+}
+
+.messageBot {
+  background-color: #e5e5e5; 
+  align-self: flex-start; 
+  max-width: 80%; 
+}
+
+.inputContainer {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #ffffff;
+}
+
+.inputField {
+  flex-grow: 1; 
+  padding: 10px;
+  border: 1px solid #ddd; 
+  border-radius: 20px; 
+  margin-right: 10px; 
+  font-size: 14px; 
+}
+
+.sendButton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  background-color: #ed5621; 
+  color: white; 
+  cursor: pointer;
+}
+
+.sendButton:hover {
+  background-color: #db4c1e;
+}
