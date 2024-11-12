@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.routers import rag_router  
 
 app = FastAPI()
-
+#Funciona despliegue en back porfavor
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000", "https://kredilibranza.netlify.app"],
