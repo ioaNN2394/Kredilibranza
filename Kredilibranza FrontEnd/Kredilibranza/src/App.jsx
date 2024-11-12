@@ -1,6 +1,6 @@
 // src/App.jsx
 
-import React, { Suspense, lazy } from 'react';
+import React, { useEffect, useState, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import PrivateRoute from './componentes/PrivateRoute';
 import FloatingChatBot from './helpers/FloatingChatBot/FloatingChatBot';
@@ -30,7 +30,46 @@ const FileUpload = lazy(() => import('./helpers/FileUpload/FileUpload'));
 const Login = lazy(() => import('./pages/Login/Login'));
 const Register = lazy(() => import('./pages/register/Register'));
 
+// URL del backend en Railway
+const apiUrl = "https://kredilibranza-production.up.railway.app";
+
+// Función para obtener datos desde el backend
+const fetchData = async (endpoint) => {
+  try {
+    const response = await fetch(`${apiUrl}${endpoint}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+};
+
 function App() {
+  const [data, setData] = useState(null);
+
+  // Ejemplo de cómo usar `fetchData` para obtener datos al cargar la página
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const result = await fetchData("/api/endpoint");
+        setData(result);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    getData();
+  }, []);
+
   return (
     <Router>
       <div>
@@ -47,6 +86,7 @@ function App() {
                   <Simulador />
                   <QuienesSomos />
                   <Footer />
+                  {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
                 </>
               }
             />
