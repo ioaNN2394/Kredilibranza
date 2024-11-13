@@ -11,8 +11,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",  # Para desarrollo local
-        "https://kredilibranza.netlify.app",  # URL de tu frontend en Netlify
-        "https://kredilibranza.netlify.app/",
+    
+        "https://sprightly-dasik-62446f.netlify.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],

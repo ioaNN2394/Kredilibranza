@@ -31,7 +31,7 @@ const Login = lazy(() => import('./pages/Login/Login'));
 const Register = lazy(() => import('./pages/register/Register'));
 
 // URL del backend en Railway
-const apiUrl = "https://kredilibranza-production.up.railway.app";
+const apiUrl = "https://kredilibranza-production.up.railway.app"; //Ajustar URL cuando se use localmente --> http://localhost:8000/token
 
 // Función para obtener datos desde el backend
 const fetchData = async (endpoint) => {
