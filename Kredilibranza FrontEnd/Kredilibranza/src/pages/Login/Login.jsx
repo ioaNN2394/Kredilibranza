@@ -41,7 +41,7 @@ export default function Login() {
 
     // Intentar iniciar sesión con el backend local
     try {
-      const response = await fetch('https://kredilibranza-production.up.railway.app/token', {
+      const response = await fetch('https://kredilibranza-production.up.railway.app/token', { //Ajustar URL cuando se use localmente --> http://localhost:8000/token
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
