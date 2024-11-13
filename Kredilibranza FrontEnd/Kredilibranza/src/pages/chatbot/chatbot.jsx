@@ -22,7 +22,7 @@ function ChatBotPage() {
 
   const getBotResponse = async (message) => {
     try {
-      const response = await fetch('http://localhost:8000/generate-answer/', {
+      const response = await fetch('https://kredilibranza-production.up.railway.app/generate-answer/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -21,7 +21,7 @@ export default function FileUpload() {
     const formData = new FormData();
     formData.append('file', file);
 
-    const uploadUrl = 'http://localhost:8000/upload-file/';
+    const uploadUrl = 'https://kredilibranza-production.up.railway.app/upload-file/';// http://localhost:8000 PARA USAR LOCALMENTE
     const token = localStorage.getItem('token');
 
     try {
@@ -73,7 +73,7 @@ export default function FileUpload() {
 
     const token = localStorage.getItem('token');
     try {
-      await axios.delete(`http://localhost:8000/delete-document/${fileObj.id}`, {
+      await axios.delete(`https://kredilibranza-production.up.railway.app/delete-document/${fileObj.id}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -91,7 +91,7 @@ export default function FileUpload() {
   const fetchRequests = async (cedula = '') => {
     const token = localStorage.getItem('token');
     try {
-      const response = await axios.get('http://localhost:8000/get-requests/', {
+      const response = await axios.get('https://kredilibranza-production.up.railway.app/get-requests/', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
